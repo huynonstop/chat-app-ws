@@ -20,6 +20,7 @@ app.get('/test', (req, res) => {
   res.status(200).json({
     message: 'Success',
     mode: app.get('env'),
+    version: process.version,
   });
 });
 app.use('*', (req, res) => {
