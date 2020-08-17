@@ -19,6 +19,7 @@ if (app.get('env') === 'development') {
 app.get('/test', (req, res) => {
   res.status(200).json({
     message: 'Success',
+    mode: app.get('env'),
   });
 });
 app.use('*', (req, res) => {
