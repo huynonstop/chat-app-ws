@@ -11,8 +11,8 @@
   "author": "huynonstop <tthuykh99@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
