@@ -30,18 +30,11 @@ app.get('/api/test', (req, res) => {
     port,
   });
 });
-app.use('/api/*', (req, res) => {
+app.use('*', (req, res) => {
   res.status(404).json({
     message: 'Not Found',
   });
 });
-
-if (app.get('env') === 'production') {
-  const buildPath = path.join(path.resolve(), '../client/build');
-  const indexHtml = path.join(buildPath, 'index.html');
-  app.use(express.static(buildPath));
-  app.get('*', (req, res) => res.sendFile(indexHtml));
-}
 
 app.use((err, req, res) => {
   res.status(err.status || 500).json({
