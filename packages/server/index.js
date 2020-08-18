@@ -36,7 +36,7 @@ app.use('/api/*', (req, res) => {
 });
 
 if (app.get('env') === 'production') {
-  const buildPath = path.resolve(path.resolve(), '../client/build');
+  const buildPath = path.join(path.resolve(), '../client/build');
   const indexHtml = path.join(buildPath, 'index.html');
   app.use(express.static(buildPath));
   app.get('*', (req, res) => res.sendFile(indexHtml));
