@@ -3,10 +3,15 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+import helmet from 'helmet';
+import path from 'path';
 
 dotenv.config();
+const port = process.env.PORT || 3001;
+const publicDirPath = path.join(path.resolve(), '/public');
 
 const app = express();
+app.use(express.static(publicDirPath));
 app.use(bodyParser.urlencoded({
   extended: false,
 }));
@@ -15,6 +20,7 @@ app.use(cors());
 if (app.get('env') === 'development') {
   app.use(morgan('combined'));
 }
+app.use(helmet());
 
 app.get('/test', (req, res) => {
   res.status(200).json({
@@ -29,14 +35,11 @@ app.use('*', (req, res) => {
   });
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   res.status(err.status || 500).json({
     message: err.message || 'Something went wrong!',
   });
-  next();
 });
-
-const port = process.env.PORT || 3001;
 
 app.listen(port, async () => {
   try {
