@@ -1,7 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { socket as createSocketClient } from '../utils';
 
-export default ({ chatLogs }) => {
-  const chats = chatLogs.map(({ user, text }) => (
+const chatLogs = [
+  { user: 'h', text: 'abc1' },
+  { user: 'h2', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
+  { user: 'h2', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
+];
+
+export default () => {
+  const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    setMessages(chatLogs);
+    createSocketClient();
+  }, []);
+  const chats = messages.map(({ user, text }) => (
     <div className="chat-row">
       <div className="avatar">{user}</div>
       <div className="text">{text}</div>

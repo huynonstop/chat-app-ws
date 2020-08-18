@@ -1,53 +1,20 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import morgan from 'morgan';
-import helmet from 'helmet';
-import path from 'path';
+import app from './app.js';
+import { port } from './env.js';
+import { init, countIO } from './io.js';
 
-dotenv.config();
-const port = process.env.PORT || 3001;
-const publicDirPath = path.join(path.resolve(), '../public');
-
-const app = express();
-app.use(express.static(publicDirPath));
-app.use(bodyParser.urlencoded({
-  extended: false,
-}));
-app.use(bodyParser.json());
-app.use(cors());
-if (app.get('env') === 'development') {
-  app.use(morgan('combined'));
-}
-app.use(helmet());
-
-app.get('/api/test', (req, res) => {
-  res.status(200).json({
-    message: 'Success',
-    mode: app.get('env'),
-    version: process.version,
-    port,
-  });
-});
-app.use('*', (req, res) => {
-  res.status(404).json({
-    message: 'Not Found',
-  });
+const server = app.listen(port, () => {
+  console.log('Database connected!');
+  console.log('Redis connected!');
+  console.log(`Server is listening on port ${port}!`);
 });
 
-app.use((err, req, res) => {
-  res.status(err.status || 500).json({
-    message: err.message || 'Something went wrong!',
-  });
-});
+const io = init(server);
 
-app.listen(port, async () => {
-  try {
-    console.log('Database connected!');
-    console.log('Redis connected!');
-    console.log(`Server is listening on port ${port}!`);
-  } catch (error) {
-    console.log(error);
-  }
+io.on('connection', (socket) => {
+  console.log('New client connected');
+  countIO.addCount();
+  socket.on('disconnect', () => {
+    console.log('A client disconnected');
+    countIO.removeCount();
+  });
 });
