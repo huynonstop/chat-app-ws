@@ -18,7 +18,7 @@ export const countIO = {
     return count;
   },
   removeCount: () => {
-    count += 1;
+    count -= 1;
     return count;
   },
 };
