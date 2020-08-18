@@ -12,7 +12,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "heroku-postbuild": "yarn --cwd ../client build"
   },
   "dependencies": {
     "body-parser": "^1.19.0",

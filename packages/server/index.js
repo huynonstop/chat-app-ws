@@ -22,18 +22,25 @@ if (app.get('env') === 'development') {
 }
 app.use(helmet());
 
-app.get('/test', (req, res) => {
+app.get('/api/test', (req, res) => {
   res.status(200).json({
     message: 'Success',
     mode: app.get('env'),
     version: process.version,
   });
 });
-app.use('*', (req, res) => {
+app.use('/api/*', (req, res) => {
   res.status(404).json({
     message: 'Not Found',
   });
 });
+
+if (app.get('env') === 'production') {
+  const buildPath = path.resolve(path.resolve(), '../client/build');
+  const indexHtml = path.join(buildPath, 'index.html');
+  app.use(express.static(buildPath));
+  app.get('*', (req, res) => res.sendFile(indexHtml));
+}
 
 app.use((err, req, res) => {
   res.status(err.status || 500).json({
