@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import api from './utils/api';
 
 function App() {
   useEffect(() => {
-    fetch('/api/test').then((res) => res.json()).then((data) => console.log(data));
+    api('test')
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
   }, []);
   return (
     <div className="App">
