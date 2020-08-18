@@ -27,6 +27,7 @@ app.get('/api/test', (req, res) => {
     message: 'Success',
     mode: app.get('env'),
     version: process.version,
+    port,
   });
 });
 app.use('/api/*', (req, res) => {
