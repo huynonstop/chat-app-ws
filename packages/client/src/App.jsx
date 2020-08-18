@@ -1,36 +1,32 @@
-import React, { useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
 import api from './utils/api';
+import ChatBox from './components/ChatBox';
 
-function App() {
+const chatLogs = [
+  { user: 'h', text: 'abc1' },
+  { user: 'h2', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
+  { user: 'h2', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
+];
+
+const App = () => {
+  const [chats, setChats] = useState([]);
   useEffect(() => {
     api('test')
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+      .then(data => {
+        console.log(data);
+        setChats(chatLogs);
+      })
+      .catch(err => console.log(err));
   }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit
-          {' '}
-          <code>src/App.js</code>
-          {' '}
-          and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ChatBox chatLogs={chats} />
     </div>
   );
-}
+};
 
 export default App;
