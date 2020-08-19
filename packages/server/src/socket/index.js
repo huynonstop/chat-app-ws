@@ -11,6 +11,7 @@ export default () => {
   if (!io) throw new Error('No Socket.io');
   return io;
 };
+
 export const countIO = {
   count: () => count,
   addCount: () => {

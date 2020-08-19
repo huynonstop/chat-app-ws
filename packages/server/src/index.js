@@ -1,6 +1,6 @@
+import { init, countIO } from './socket/index.js';
 import app from './app.js';
-import { port } from './env.js';
-import { init, countIO } from './io.js';
+import { port } from './config.js';
 
 const server = app.listen(port, () => {
   console.log('Database connected!');

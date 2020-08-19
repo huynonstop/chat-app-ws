@@ -5,8 +5,8 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import path from 'path';
 
-import { port } from './env.js';
-import { countIO } from './io.js';
+import { mode } from './config.js';
+import router from './routes/index.js';
 
 const publicDirPath = path.join(path.resolve(), '../public');
 
@@ -18,20 +18,13 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(cors());
-if (app.get('env') === 'development') {
+if (mode === 'development') {
   app.use(morgan('combined'));
 }
 app.use(helmet());
 
-app.get('/api/test', (req, res) => {
-  res.status(200).json({
-    message: 'Success',
-    mode: app.get('env'),
-    version: process.version,
-    port,
-    currentIO: countIO.count(),
-  });
-});
+app.use(router);
+
 app.use('*', (req, res) => {
   res.status(404).json({
     message: 'Not Found',
