@@ -56,13 +56,8 @@ export default ({
         name="confirmPassword"
         type="password"
         id="confirmPassword"
-        value={confirmPassword}
-        onChange={(e) => {
-          onChange(e);
-          if (password !== e.target.value) {
-            e.target.setCustomValidity('Confirm Password must match');
-          }
-        }}
+        pattern={password}
+        title="Confirm password must match"
         required
       />
     </label>
