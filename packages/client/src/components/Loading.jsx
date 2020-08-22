@@ -1,15 +1,10 @@
-import React from 'react';
+// import React from 'react';
+import { ReactComponent as HeartLoading } from '../svg/loading-heart.svg';
 
 const Loading = () => (
-  <svg width="157px" height="126px" viewBox="0 0 157 126">
-    <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-      <g id="Desktop" transform="translate(-267.000000, -301.000000)" stroke="#000000" strokeWidth="20">
-        <g id="Heart-Group" transform="translate(278.000000, 311.000000)">
-          <path d="M66.6562543,13.6106531 C115.669926,-30.8795812 193.14986,44.3686482 66.6562543,104.323088 C-54.0630308,44.3686482 16.35352,-31.3170812 66.6562543,13.6106531 Z" id="heart" />
-        </g>
-      </g>
-    </g>
-  </svg>
+  HeartLoading
 );
 
 export default Loading;
+
+export { HeartLoading };

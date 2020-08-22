@@ -1,11 +1,10 @@
 import React from 'react';
-import Container from '../components/Container';
-import Loading from '../components/Loading';
+import { HeartLoading } from '../components/Loading';
 
-const NotFound = () => (
-  <Container flex className="page">
-    <Loading />
-  </Container>
+const LoadingPage = () => (
+  <div flex className="page absolute bg-white">
+    <HeartLoading />
+  </div>
 );
 
-export default NotFound;
+export default LoadingPage;

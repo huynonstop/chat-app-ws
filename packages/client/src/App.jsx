@@ -6,6 +6,7 @@ import { authState } from './store/state';
 import ChatPage from './pages/ChatPage';
 import LoginPage from './pages/LoginPage';
 import LoadingPage from './pages/LoadingPage';
+import SignUpPage from './pages/SignUpPage';
 import Logout from './components/Logout';
 import NotFound from './pages/404';
 
@@ -46,10 +47,10 @@ const App = () => {
         ) : (
           <>
             <LoginPage path="/login" />
+            <SignUpPage path="/signup" />
             <Redirect from="/" to="/login" noThrow />
           </>
         )}
-        <LoadingPage path="/loading" />
         <NotFound default />
       </Router>
     </div>
