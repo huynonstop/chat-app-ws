@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { Link } from '@reach/router';
+
 import { countIOState } from '../store/state';
 import { socket as createSocketClient, api } from '../utils';
 import ChatBox from '../components/ChatBox';
@@ -106,7 +106,6 @@ export default () => {
       />
       <div className="sidebar flex-1/4-lg border h-screen of-y-a scrollbar">
         Side bar people info
-        <Link to="/logout">Logout</Link>
       </div>
     </Container>
   );

@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import Logout from './components/Logout';
 import NotFound from './pages/404';
+import AboutUs from './pages/AboutUs';
 
 const App = () => {
   const [isAuth] = useTryAutoAuth();
@@ -25,6 +26,7 @@ const App = () => {
             <Redirect from="/" to="/login" noThrow />
           </>
         )}
+        <AboutUs path="/about-us" />
         <NotFound default />
       </Router>
     </div>

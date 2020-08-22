@@ -31,6 +31,14 @@ body {
   padding: 0.5rem;
 }
 
+.pxy-1\/2-1 {
+  padding: 0.5rem 1rem;
+}
+
+.mr-1\/2 {
+  margin-right: 0.5rem;
+}
+
 .font-2x,
 .font-2x input,
 .font-2x button {
@@ -46,6 +54,62 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.p-2 {
+  padding: 2rem;
+}
+
+.icon-circle {
+  position: relative;
+  border-radius: 50%;
+  transition: all 0.3s ease-in-out;
+}
+
+.s-icon {
+  width: 2rem;
+  height: 2rem
+}
+
+
+.s-icon-3\/2 {
+  width: 3rem;
+  height: 3rem
+}
+
+.avatar {
+  height: 4rem;
+  flex: 0 0 4rem;
+}
+
+.avatar-1\/2 {
+  height: 2rem;
+  flex: 0 0 2rem;
+}
+
+.avatar-3\/4 {
+  height: 3rem;
+  flex: 0 0 3rem;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+}
+
+.absolute-center-xy {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.relative {
+  position: relative;
+}
+
+.d-inline-block {
+  display: inline-block;
 }
 
 * {
@@ -142,6 +206,10 @@ code {
 }
 
 .border {
+  border: solid 1px #caf0f8;
+}
+
+.border-sub {
   border: solid 1px rgba(0, 0, 0, 0.1);
 }
 
@@ -159,6 +227,7 @@ code {
 }
 
 .chat-box .body {
+  padding: 0.5rem 0.5rem;
   flex: 1 0;
   max-height: 100vh;
   overflow-y: auto;
@@ -167,9 +236,12 @@ code {
 }
 
 .chat-box .chat-row {
-  padding: 0.1rem 1rem;
   flex: 1 0 100%;
   max-width: 100%;
+}
+
+.chat-row + .chat-row {
+  padding-top: 0.15rem;
 }
 
 .chat-row .text {
@@ -182,6 +254,8 @@ code {
   background-color: #d6f2f8;
   color: #023e8a;
   border: none;
+
+  border-radius: 0rem 1rem 1rem 0rem;
 }
 
 .chat-row .text.user {
@@ -193,6 +267,8 @@ code {
 
   background-color: #0077b6;
   color: white;
+
+  border-radius: 1rem 0rem 0rem 1rem;
 }
 
 .bg-main {
@@ -259,25 +335,39 @@ header {
 }
 
 .btn-send {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  justify-self: flex-end;
-  padding: 0;
   outline: none;
   border: none;
-  background-color: rgb(221, 250, 250);
-  color: none;
-  height: 100%;
   border-radius: 50%;
-  transition: all 0.3s ease-in-out;
 }
 
 .btn-send:hover {
   outline-color: none;
   box-shadow: none;
+}
+
+.bg-icon-send {
+  background-color: rgb(221, 250, 250);
+}
+
+.bg-icon-send:hover {
   background-color: white;
   box-shadow: #caf0f8;
+}
+
+.bg-icon {
+  background-color: transparent;
+  border-color: #0077b6;
+  fill: #0077b6;
+}
+
+.bg-icon:hover {
+  background-color: #0077b6;
+  box-shadow: #caf0f8;
+  fill: white;
+}
+
+.m-0 {
+  margin: 0px;
 }
 
 .m-auto {
@@ -307,17 +397,17 @@ header {
   align-items: flex-end;
 }
 
-.input-row {
-  padding: 1rem 2rem;
+.send-row {
+  padding: 1rem;
 }
 
-.input-row input {
+.send-row  input {
   outline: none;
   border: none;
   background-color: white;
   color: #0077b6;
-  padding: 8px 1.5rem;
-  border-radius: 3rem;
+  padding: 0 1rem;
+  border-radius: 1rem;
   margin-right: 0.5rem;
 }
 
@@ -501,7 +591,7 @@ button:hover {
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
+input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 textarea:-webkit-autofill,
 textarea:-webkit-autofill:hover,
