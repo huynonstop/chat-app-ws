@@ -1,5 +1,6 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import { navigate } from '@reach/router';
+import useForm from '../hooks/useForm';
 
 import LoadingPage from './LoadingPage';
 import Container from '../components/Container';
@@ -10,50 +11,38 @@ const INIT_FORM_STATE = {
   email: '',
   password: '',
   confirmPassword: '',
-  isLoading: false,
-};
-
-const formReducer = (state, [type, { value, field } = {}]) => {
-  switch (type) {
-    case 'update':
-      return { ...state, [field]: value };
-    case 'reset':
-      return { ...INIT_FORM_STATE };
-    case 'loading':
-      return { ...state, isLoading: true };
-    case 'finishLoading':
-      return { ...state, isLoading: false };
-    default:
-      throw new Error(`Invalid action ${type}`);
-  }
 };
 
 export default () => {
-  const [formState, dispatch] = useReducer(formReducer, INIT_FORM_STATE);
+  const {
+    formState,
+    dispatch,
+    onFormInputChange,
+    formLoading,
+    setFormLoading,
+  } = useForm(INIT_FORM_STATE, {
+    loading: true,
+  });
   const onSubmit = e => {
     e.preventDefault();
     // const user = {
     //   username: 'abc',
     // };
     dispatch(['reset']);
-    dispatch(['loading']);
+    setFormLoading(true);
     setTimeout(() => {
-      dispatch(['finishLoading']);
+      setFormLoading(false);
       navigate('/login');
     }, 6000);
   };
-  const onChange = e => {
-    const { value, id: field } = e.target;
-    dispatch(['update', { value, field }]);
-  };
   return (
-    <Container
-      flex
-      fluid
-      className="page bg-white"
-    >
-      {formState.isLoading && <LoadingPage />}
-      <SignUp onSubmit={onSubmit} formState={formState} onChange={onChange} />
+    <Container flex fluid className="page bg-white">
+      {formLoading && <LoadingPage />}
+      <SignUp
+        onSubmit={onSubmit}
+        formState={formState}
+        onChange={onFormInputChange}
+      />
     </Container>
   );
 };

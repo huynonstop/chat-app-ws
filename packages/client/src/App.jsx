@@ -1,40 +1,14 @@
-import React, { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import React from 'react';
 import { Router, Redirect } from '@reach/router';
-import { authState } from './store/state';
-
+import useTryAutoAuth from './hooks/useTryAutoAuth';
 import ChatPage from './pages/ChatPage';
 import LoginPage from './pages/LoginPage';
-import LoadingPage from './pages/LoadingPage';
 import SignUpPage from './pages/SignUpPage';
 import Logout from './components/Logout';
 import NotFound from './pages/404';
 
 const App = () => {
-  const [{ isAuth }, setAuthState] = useRecoilState(authState);
-  useEffect(() => {
-    if (isAuth === null) {
-      const tokenStorage = sessionStorage.getItem('token');
-      const userStorage = JSON.parse(sessionStorage.getItem('user'));
-      let isAuthStorage = false;
-      if (tokenStorage && userStorage) {
-        isAuthStorage = true;
-      }
-      setAuthState(state => ({
-        ...state,
-        isAuth: isAuthStorage,
-        user: userStorage,
-        token: tokenStorage,
-      }));
-    }
-  }, [setAuthState, isAuth]);
-  if (isAuth === null) {
-    return (
-      <div className="app">
-        <LoadingPage />
-      </div>
-    );
-  }
+  const [isAuth] = useTryAutoAuth();
   return (
     <div className="app">
       <Router>

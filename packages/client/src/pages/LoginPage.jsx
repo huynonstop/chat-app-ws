@@ -1,6 +1,7 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import { useSetRecoilState } from 'recoil';
 import { navigate } from '@reach/router';
+import useForm from '../hooks/useForm';
 
 import Container from '../components/Container';
 import Login from '../components/Login';
@@ -11,19 +12,8 @@ const INIT_FORM_STATE = {
   password: '',
 };
 
-const formReducer = (state, [type, { value, field } = {}]) => {
-  switch (type) {
-    case 'update':
-      return { ...state, [field]: value };
-    case 'reset':
-      return { ...INIT_FORM_STATE };
-    default:
-      throw new Error(`Invalid action ${type}`);
-  }
-};
-
 export default () => {
-  const [formState, dispatch] = useReducer(formReducer, INIT_FORM_STATE);
+  const { formState, dispatch, onFormInputChange } = useForm(INIT_FORM_STATE);
   const setAuthState = useSetRecoilState(authState);
   const onSubmit = e => {
     e.preventDefault();
@@ -42,17 +32,13 @@ export default () => {
     sessionStorage.setItem('user', JSON.stringify(user));
     navigate('/');
   };
-  const onChange = e => {
-    const { value, id: field } = e.target;
-    dispatch(['update', { value, field }]);
-  };
   return (
-    <Container
-      flex
-      fluid
-      className="page"
-    >
-      <Login onSubmit={onSubmit} formState={formState} onChange={onChange} />
+    <Container flex fluid className="page">
+      <Login
+        onSubmit={onSubmit}
+        formState={formState}
+        onChange={onFormInputChange}
+      />
     </Container>
   );
 };
