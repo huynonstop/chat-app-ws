@@ -549,13 +549,13 @@ input:focus::placeholder {
     rgba(65, 152, 255, 1) 49%,
     rgba(0, 212, 255, 1) 100%
   );
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .signUp-form h1 {
   background: linear-gradient(-105deg, #363795, #009acc);
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -670,21 +670,6 @@ button:hover {
   }
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus {
-  border: 1px solid transparent;
-  -webkit-text-fill-color: inherit;
-  -webkit-box-shadow: none;
-  transition: background-color 5000s ease-in-out 0s;
-}
-
 /* SVG spinner icon animation */
 .spinner {
   animation: rotate 2s linear infinite;
@@ -716,11 +701,18 @@ select:-webkit-autofill:focus {
     stroke-dashoffset: -124;
   }
 }
-
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px white inset !important;
+.form-input input:-webkit-autofill,
+.form-input input:-webkit-autofill:hover,
+.form-input input:-webkit-autofill:focus,
+.form-input input:-webkit-autofill:active,
+.form-input textarea:-webkit-autofill,
+.form-input textarea:-webkit-autofill:hover,
+.form-input textarea:-webkit-autofill:focus,
+.form-input select:-webkit-autofill,
+.form-input select:-webkit-autofill:hover,
+.form-input select:-webkit-autofill:focus {
   border: 2px solid #00b4d8 ;
+  -webkit-text-fill-color: inherit;
+  box-shadow: none;
+  transition: background-color 5000s ease-in-out 0s;
 }
