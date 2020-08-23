@@ -272,18 +272,18 @@ code {
   color: #0077b6;
   border: none;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 1px 2rem 2rem 1px;
+  border-radius: 0.5rem 2rem 2rem 0.5rem;
   align-self: flex-start;
 }
 
 .text.top {
-  border-radius: 2rem 2rem 2rem 1px;
+  border-radius: 2rem 2rem 2rem 0.5rem;
 }
 .text.top.bottom {
   border-radius: 2rem;
 }
 .text.bottom {
-  border-radius: 1px 2rem 2rem 2rem;
+  border-radius: 0.5rem 2rem 2rem 2rem;
 }
 
 .chat-row .text:hover {
@@ -293,7 +293,7 @@ code {
 .chat-row .text.user {
   background-color: #0077b6;
   color: white;
-  border-radius: 2rem 1px 1px 2rem;
+  border-radius: 2rem 0.5rem 0.5rem 2rem;
   align-self: flex-end;
 }
 
@@ -302,13 +302,13 @@ code {
 }
 
 .text.user.top {
-  border-radius: 2rem 2rem 1px 2rem;
+  border-radius: 2rem 2rem 0.5rem 2rem;
 }
 .text.user.top.bottom {
   border-radius: 2rem;
 }
 .text.user.bottom {
-  border-radius: 2rem 1px 2rem 2rem;
+  border-radius: 2rem 0.5rem 2rem 2rem;
 }
 
 .chat-row .text.user:hover {

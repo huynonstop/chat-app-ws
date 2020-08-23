@@ -19,7 +19,7 @@ export default () => {
     e.preventDefault();
     const token = 'token';
     const user = {
-      username: 'abc',
+      username: formState.username,
     };
     setAuthState(state => ({
       ...state,

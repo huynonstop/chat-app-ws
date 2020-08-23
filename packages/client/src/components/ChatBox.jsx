@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Link } from '@reach/router';
 import { ReactComponent as Send } from '../svg/send.svg';
 import { ReactComponent as Logout } from '../svg/logout.svg';
@@ -18,6 +18,7 @@ const Avatar = ({
 const ChatRow = ({
   user, text, beginText = true, endText = true, isUser,
 }) => {
+  const chatRowRef = useRef(null);
   const userClass = isUser ? 'user' : '';
   const avatarOnText = beginText && !isUser ? (
     <div className="d-flex">
@@ -29,8 +30,11 @@ const ChatRow = ({
       </Avatar>
     </div>
   ) : null;
+  useEffect(() => {
+    chatRowRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, []);
   return (
-    <div className="d-flex chat-row flex-column">
+    <div className="d-flex chat-row flex-column" ref={chatRowRef}>
       {avatarOnText}
       <div
         className={`flex-0 text ml-2 ${userClass} ${beginText ? 'top' : ''} ${
@@ -44,20 +48,22 @@ const ChatRow = ({
 };
 
 export default ({
+  username: user,
   className,
   messages,
   onSubmit,
   messageInput,
   setMessageInput,
+  isLoading,
 }) => {
-  const chats = messages.map(({ user, text, key }, index) => (
+  const chats = messages.map(({ username, message, key }, index) => (
     <ChatRow
-      isUser={user === 'h'}
-      user={user}
-      text={text}
+      isUser={username === user}
+      user={username}
+      text={message}
       key={key}
-      endText={messages[index + 1] ? messages[index + 1].user !== user : true}
-      beginText={index ? messages[index - 1].user !== user : true}
+      endText={messages[index + 1] ? messages[index + 1].username !== username : true}
+      beginText={index ? messages[index - 1].username !== username : true}
     />
   ));
   return (
@@ -79,7 +85,7 @@ export default ({
       </div>
       <div className="d-flex bg-sidebar body content-under-2-header scrollbar">
         <div className="d-flex chat-row justify-content-center">
-          <Spinner />
+          {isLoading && <Spinner />}
         </div>
         {chats}
       </div>

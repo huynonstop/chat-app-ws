@@ -25,18 +25,22 @@ export const init = (server) => {
   io = socketio(server);
   io.on('connection', (socket) => {
     let message = 'A new client connected';
-    io.emit('countConnect-update', {
+    socket.broadcast.emit('new-connect', {
       message,
-      data: countIO.addCount(),
+      data: {
+        count: countIO.addCount(),
+      },
     });
     console.log(message, count);
     socket.on('disconnect', () => {
       message = 'A new client disconnected';
-      io.emit('countConnect-update', {
+      socket.broadcast.emit('new-disconnect', {
         message: 'A new client disconnected',
-        data: countIO.removeCount(),
+        data: {
+          count: countIO.removeCount(),
+        },
       });
-      console.log(message);
+      console.log(message, count);
     });
   });
   return io;

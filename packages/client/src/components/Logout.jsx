@@ -7,7 +7,7 @@ import { AUTH } from '../store/atom';
 export default () => {
   const setAuthState = useSetRecoilState(authState);
   useEffect(() => {
-    setAuthState(AUTH.default);
+    setAuthState({ ...AUTH.default, isAuth: false });
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('user');
   });

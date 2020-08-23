@@ -1,98 +1,51 @@
 import React, { useEffect, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
-import { countIOState } from '../store/state';
-import { socket as createSocketClient, api } from '../utils';
+import useSocket from '../hooks/useSocket';
+import { api } from '../utils';
 import ChatBox from '../components/ChatBox';
 import Container from '../components/Container';
-
-const chatLogs = [
-  {
-    user: 'h33',
-    text:
-      'abc1asdasjdjasdjas\njdaskjdc1asdasjdjasdjasjdaskjdjkasdjkac1asdasjdjasdjasjdaskjdjkasdjkac1asdasjdjasdjasjdaskjdjkasdjkajkasdjkasjdkasjkdasjk',
-  },
-  { user: 'h32', text: 'abc1' },
-  { user: 'h32', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-].map((text, index) => ({ ...text, key: index }));
+import { authState } from '../store/state';
 
 export default () => {
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState('');
-  const setCount = useSetRecoilState(countIOState);
+  const [loadingMessage, setLoadingMessage] = useState(null);
+  const {
+    user: { username },
+  } = useRecoilValue(authState);
+  useSocket(setMessages);
   useEffect(() => {
-    setMessages(chatLogs);
-    const socket = createSocketClient();
-    socket.on('countConnect-update', ({ data, message }) => {
-      setCount(data);
-      console.log(message);
-    });
-    socket.on('message-create', ({ message }) => {
-      console.log('a message from you friend');
-    });
-  }, [setMessages, setCount]);
+    setLoadingMessage(true);
+    const fetchMessage = async () => {
+      try {
+        const { data } = await api('message');
+        setMessages(data);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoadingMessage(false);
+      }
+    };
+    fetchMessage();
+  }, [setMessages]);
   const onSubmit = async e => {
     e.preventDefault();
     if (!messageInput) return;
     const options = {
       method: 'POST',
-      data: { message: messageInput },
+      data: { message: messageInput, username },
     };
     try {
-      console.log('Send');
       const data = await api('message', options);
       setMessageInput('');
     } catch (err) {
       console.log(err);
     }
   };
+  if (loadingMessage === null) {
+    return null;
+  }
   return (
     <Container flex fluid className="page">
       <div className="sidebar flex-1/4-lg h-screen of-y-a scrollbar">
@@ -100,10 +53,12 @@ export default () => {
       </div>
       <ChatBox
         className="d-flex flex-1/2-md h-screen of-y-h"
+        username={username}
         messages={messages}
         onSubmit={onSubmit}
         messageInput={messageInput}
         setMessageInput={setMessageInput}
+        isLoading={loadingMessage}
       />
       <div className="sidebar flex-1/4-lg h-screen of-y-a scrollbar">
         Side bar people info
