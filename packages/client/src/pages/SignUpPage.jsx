@@ -10,7 +10,6 @@ const INIT_FORM_STATE = {
   username: '',
   email: '',
   password: '',
-  confirmPassword: '',
 };
 
 export default () => {
@@ -36,7 +35,7 @@ export default () => {
     }, 6000);
   };
   return (
-    <Container flex fluid className="page bg-white">
+    <Container flex fluid className="page bg-gradient-main ">
       {formLoading && <LoadingPage />}
       <SignUp
         onSubmit={onSubmit}

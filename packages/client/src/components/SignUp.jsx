@@ -62,7 +62,7 @@ export default ({
       />
     </label>
     <div className="d-flex w-100 justify-content-evenly mt-3">
-      <button className="btn btn-main" type="submit">
+      <button className="btn btn-main bg-gradient-main" type="submit">
         Register
       </button>
     </div>

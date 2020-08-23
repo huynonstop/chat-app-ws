@@ -13,6 +13,15 @@ const chatLogs = [
       'abc1asdasjdjasdjas\njdaskjdc1asdasjdjasdjasjdaskjdjkasdjkac1asdasjdjasdjasjdaskjdjkasdjkac1asdasjdjasdjasjdaskjdjkasdjkajkasdjkasjdkasjkdasjk',
   },
   { user: 'h32', text: 'abc1' },
+  { user: 'h32', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
+  { user: 'h2', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
+  { user: 'h2', text: 'abc1' },
+  { user: 'h', text: 'abc1' },
   { user: 'h', text: 'abc1' },
   { user: 'h', text: 'abc1' },
   { user: 'h', text: 'abc1' },
@@ -24,14 +33,6 @@ const chatLogs = [
   { user: 'h', text: 'abc1' },
   { user: 'h', text: 'abc1' },
   { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
-  { user: 'h2', text: 'abc1' },
-  { user: 'h', text: 'abc1' },
   { user: 'h', text: 'abc1' },
   { user: 'h2', text: 'abc1' },
   { user: 'h', text: 'abc1' },
@@ -94,7 +95,7 @@ export default () => {
   };
   return (
     <Container flex fluid className="page">
-      <div className="sidebar flex-1/4-lg border h-screen of-y-a scrollbar">
+      <div className="sidebar flex-1/4-lg h-screen of-y-a scrollbar">
         Side bar room chat
       </div>
       <ChatBox
@@ -104,7 +105,7 @@ export default () => {
         messageInput={messageInput}
         setMessageInput={setMessageInput}
       />
-      <div className="sidebar flex-1/4-lg border h-screen of-y-a scrollbar">
+      <div className="sidebar flex-1/4-lg h-screen of-y-a scrollbar">
         Side bar people info
       </div>
     </Container>

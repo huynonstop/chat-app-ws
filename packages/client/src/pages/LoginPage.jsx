@@ -33,7 +33,7 @@ export default () => {
     navigate('/');
   };
   return (
-    <Container flex fluid className="page">
+    <Container flex fluid className="page bg-sidebar">
       <Login
         onSubmit={onSubmit}
         formState={formState}

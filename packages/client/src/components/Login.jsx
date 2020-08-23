@@ -9,7 +9,6 @@ export default ({
   <form className="form login-form" onSubmit={onSubmit}>
     <h1>RamChat</h1>
     <label className="form-input" htmlFor="username">
-      <span>Username</span>
       <input
         required
         type="text"
@@ -20,6 +19,7 @@ export default ({
         pattern="^[\w\d_]{6,}$"
         title="Minimum 6 characters. Only letters, numbers and underscores is allowed"
       />
+      <span>Username</span>
     </label>
     <label className="form-input" htmlFor="password">
       <span>Password</span>
@@ -35,7 +35,7 @@ export default ({
       />
     </label>
     <div className="d-flex w-100 justify-content-evenly mt-3">
-      <button className="btn btn-main " type="submit">
+      <button className="btn btn-main bg-sidebar" type="submit">
         Login
       </button>
       <Link className="btn btn-sub" to="/signup">
