@@ -11,6 +11,7 @@ export default () => {
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState('');
   const [loadingMessage, setLoadingMessage] = useState(null);
+  const [loadingMessageInput, setLoadingMessageInput] = useState(false);
   const { username } = useRecoilValue(authState);
   useSocket(setMessages);
   useEffect(() => {
@@ -35,10 +36,13 @@ export default () => {
       data: { message: messageInput, username },
     };
     setMessageInput('');
+    setLoadingMessageInput(true);
     try {
       await api('message', options);
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoadingMessageInput(false);
     }
   };
   if (loadingMessage === null) {
@@ -56,7 +60,8 @@ export default () => {
         onSubmit={onSubmit}
         messageInput={messageInput}
         setMessageInput={setMessageInput}
-        isLoading={loadingMessage}
+        loadingMessage={loadingMessage}
+        loadingMessageInput={loadingMessageInput}
       />
       <div className="sidebar flex-1/4-lg h-screen of-y-a scrollbar">
         Side bar people info

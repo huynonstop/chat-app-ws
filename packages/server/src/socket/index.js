@@ -10,6 +10,7 @@ const getIO = () => {
 export default getIO;
 
 export const countIO = {
+  count: () => count,
   addCount: () => {
     count += 1;
     return count;

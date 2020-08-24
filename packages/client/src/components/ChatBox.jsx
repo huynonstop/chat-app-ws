@@ -54,7 +54,8 @@ export default ({
   onSubmit,
   messageInput,
   setMessageInput,
-  isLoading,
+  loadingMessage,
+  loadingMessageInput,
 }) => {
   const chats = messages.map(({ username, message, key }, index) => (
     <ChatRow
@@ -62,7 +63,9 @@ export default ({
       user={username}
       text={message}
       key={key}
-      endText={messages[index + 1] ? messages[index + 1].username !== username : true}
+      endText={
+        messages[index + 1] ? messages[index + 1].username !== username : true
+      }
       beginText={index ? messages[index - 1].username !== username : true}
     />
   ));
@@ -83,9 +86,9 @@ export default ({
           </Link>
         </div>
       </div>
-      <div className="d-flex body content-under-2-header scrollbar">
+      <div className="d-flex body content-under-2-header scrollbar align-items-start">
         <div className="d-flex chat-row justify-content-center">
-          {isLoading && <Spinner />}
+          {loadingMessage && <Spinner />}
         </div>
         {chats}
       </div>
@@ -96,13 +99,18 @@ export default ({
             value={messageInput}
             onChange={e => setMessageInput(e.target.value)}
             placeholder="Aa..."
+            required
           />
-          <button
-            className="flex-0 btn-send bg-icon-send icon-circle p-2 border-sub"
-            type="submit"
-          >
-            <Send className="s-icon-3/2 absolute-center-xy" />
-          </button>
+          {loadingMessageInput ? <Spinner className="spinner white" /> : (
+            <button
+              style={{ padding: '1.5rem' }}
+              className="flex-0 max-3/2 btn-send bg-icon-send icon-circle border-sub"
+              type="submit"
+              disabled={messageInput === ''}
+            >
+              <Send className="absolute-center-xy" />
+            </button>
+          )}
         </div>
       </form>
     </div>
