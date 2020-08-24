@@ -5,18 +5,13 @@ import { authState } from '../store/state';
 export default () => {
   const setAuthState = useSetRecoilState(authState);
   useEffect(() => {
-    const tokenStorage = sessionStorage.getItem('token');
-    const userStorage = JSON.parse(sessionStorage.getItem('user'));
-    let isAuthStorage = false;
-    if (tokenStorage && userStorage) {
-      isAuthStorage = true;
+    let auth = JSON.parse(localStorage.getItem('user')) || {};
+    if (!auth.token || !auth.username) {
+      auth = JSON.parse(sessionStorage.getItem('user')) || {};
     }
-    setAuthState(state => ({
-      ...state,
-      isAuth: isAuthStorage,
-      user: userStorage,
-      token: tokenStorage,
-    }));
+    const { username, token } = auth;
+    const isAuth = username && token;
+    setAuthState({ isAuth, username, token });
   }, [setAuthState]);
   return null;
 };

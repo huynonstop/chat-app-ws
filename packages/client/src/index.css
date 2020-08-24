@@ -88,6 +88,8 @@ code {
 .avatar {
   height: 4rem;
   flex: 0 0 4rem;
+  border-radius: 50%;
+  box-shadow: 0px 0px 0.5rem rgba(0, 0, 0, 0.3);
 }
 
 .avatar-1\/2 {
@@ -240,6 +242,7 @@ code {
   max-height: 100vh;
   overflow-y: auto;
   flex-wrap: wrap;
+  padding: 0.5rem 0;
 }
 
 .chat-box .chat-row {
@@ -250,14 +253,27 @@ code {
 .text-white {
   color: white;
 }
+.text-main {
+  color: #333333;
+}
 
-.bg-sidebar {
+.bg-login {
   background: rgb(126, 249, 245);
   background: linear-gradient(
     349deg,
     rgba(126, 249, 245, 1) 0%,
     rgba(65, 152, 255, 1) 49%,
     rgba(0, 212, 255, 1) 100%
+  );
+}
+
+.bg-sidebar {
+  background: rgb(126, 249, 245);
+  background: linear-gradient(
+    190deg,
+    rgb(148, 126, 249) 0%,
+    rgba(65, 152, 255, 1) 69%,
+    rgb(147, 81, 253) 100%
   );
 }
 
@@ -287,7 +303,7 @@ code {
 }
 
 .chat-row .text:hover {
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
 }
 
 .chat-row .text.user {
@@ -299,6 +315,16 @@ code {
 
 .bg-gradient-main {
   background-image: linear-gradient(105deg, #009acc, #1890a098, #009acc);
+}
+
+.bg-chat-box {
+  background: rgb(126, 249, 245);
+  background: linear-gradient(
+    150deg,
+    rgb(79, 197, 193) 0%,
+    rgba(65, 152, 255, 1) 49%,
+    rgb(32, 194, 226) 100%
+  );
 }
 
 .text.user.top {
@@ -330,6 +356,10 @@ code {
 
 .text.bg-main {
   color: #f5f5f5;
+}
+
+.align-self-start {
+  align-self: flex-start;
 }
 
 .align-self-end {
@@ -393,17 +423,18 @@ header {
 }
 
 .bg-icon-send {
-  background-color: white;
-  fill: #0077b6;
+  background-color: transparent;
+  fill: #f5f5f5;
 }
 
 .bg-icon-send:hover {
   background: #f5f5f5;
   box-shadow: 0px 0px 0.5rem rgba(0, 0, 0, 0.3);
+  fill: #0077b6;
 }
 
 .bg-icon {
-  background-color: #0077b6;
+  background-color: transparent;
   border-color: #0077b6;
   fill: white;
 }
@@ -484,7 +515,6 @@ input:focus::placeholder {
 }
 
 .form-send {
-  background-color: white;
   flex: 0 0;
   z-index: 2;
   position: relative;
@@ -537,6 +567,7 @@ input:focus::placeholder {
 }
 
 .form h1 {
+  text-align: center;
   font-family: 'Dancing Script', serif;
   margin-top: 0;
   font-size: 5rem;
@@ -565,8 +596,8 @@ input:focus::placeholder {
   transition: 0.2s all;
   cursor: text;
   display: block;
-  width: 300px;
-  margin: 1.5rem auto;
+  cursor: default;
+  max-width: 300px;
 }
 
 .form-input span {
@@ -589,6 +620,22 @@ input:focus::placeholder {
   font-size: 2rem;
   padding: 0.8rem;
   border: 2px solid #00b4d8;
+  margin-bottom: 2.5rem;
+}
+.form-input input[type='checkbox'] {
+  width: auto;
+  transform: scale(1.5);
+  margin: 0 0.5rem;
+}
+
+.form-input input[type='checkbox'] ~ span {
+  position: relative;
+  font-size: inherit;
+  background-color: white;
+  color: inherit;
+  top: 0;
+  left: 0;
+  cursor: pointer;
 }
 
 .btn {
@@ -677,7 +724,7 @@ button:hover {
   height: 50px;
 }
 .spinner .path {
-  stroke: white;
+  stroke: #0077b6;
   stroke-linecap: round;
   animation: dash 1.5s ease-in-out infinite;
 }
@@ -711,7 +758,7 @@ button:hover {
 .form-input select:-webkit-autofill,
 .form-input select:-webkit-autofill:hover,
 .form-input select:-webkit-autofill:focus {
-  border: 2px solid #00b4d8 ;
+  border: 2px solid #00b4d8;
   -webkit-text-fill-color: inherit;
   box-shadow: none;
   transition: background-color 5000s ease-in-out 0s;

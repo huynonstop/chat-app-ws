@@ -3,7 +3,7 @@ import React from 'react';
 export default ({
   onSubmit,
   formState: {
-    username, password, confirmPassword, email,
+    username, password, email,
   },
   onChange,
 }) => (
@@ -62,7 +62,7 @@ export default ({
       />
     </label>
     <div className="d-flex w-100 justify-content-evenly mt-3">
-      <button className="btn btn-main bg-gradient-main" type="submit">
+      <button className="btn btn-main bg-login" type="submit">
         Register
       </button>
     </div>

@@ -35,7 +35,7 @@ export default () => {
     }, 6000);
   };
   return (
-    <Container flex fluid className="page bg-gradient-main ">
+    <Container flex fluid className="page bg-login ">
       {formLoading && <LoadingPage />}
       <SignUp
         onSubmit={onSubmit}

@@ -11,9 +11,7 @@ export default () => {
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState('');
   const [loadingMessage, setLoadingMessage] = useState(null);
-  const {
-    user: { username },
-  } = useRecoilValue(authState);
+  const { username } = useRecoilValue(authState);
   useSocket(setMessages);
   useEffect(() => {
     setLoadingMessage(true);
@@ -36,9 +34,9 @@ export default () => {
       method: 'POST',
       data: { message: messageInput, username },
     };
+    setMessageInput('');
     try {
-      const data = await api('message', options);
-      setMessageInput('');
+      await api('message', options);
     } catch (err) {
       console.log(err);
     }

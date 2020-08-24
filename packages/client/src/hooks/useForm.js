@@ -24,8 +24,11 @@ export default (INIT_FORM_STATE, { loading } = {}) => {
     INIT_FORM_STATE,
   );
   const onFormInputChange = e => {
-    const { value, id: field } = e.target;
-    dispatch(['update', { value, field }]);
+    const {
+      value, id: field, type, checked,
+    } = e.target;
+    const valueInput = type === 'checkbox' ? checked : value;
+    dispatch(['update', { value: valueInput, field }]);
   };
   return {
     formState,

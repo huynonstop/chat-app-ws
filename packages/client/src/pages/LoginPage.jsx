@@ -10,6 +10,7 @@ import { authState } from '../store/state';
 const INIT_FORM_STATE = {
   username: '',
   password: '',
+  remember: false,
 };
 
 export default () => {
@@ -18,18 +19,13 @@ export default () => {
   const onSubmit = e => {
     e.preventDefault();
     const token = 'token';
-    const user = {
-      username: formState.username,
-    };
-    setAuthState(state => ({
-      ...state,
-      isAuth: true,
-      user,
-      token,
-    }));
+    const { username } = formState;
+    setAuthState({ token, username, isAuth: true });
     dispatch(['reset']);
-    sessionStorage.setItem('token', token);
-    sessionStorage.setItem('user', JSON.stringify(user));
+    if (formState.remember) {
+      localStorage.setItem('user', JSON.stringify({ token, username }));
+    }
+    sessionStorage.setItem('user', JSON.stringify({ token, username }));
     navigate('/');
   };
   return (

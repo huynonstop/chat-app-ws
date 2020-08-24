@@ -26,7 +26,7 @@ const ChatRow = ({
         className="avatar-1/2"
         src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/256/ICON-ICX-icon.png"
       >
-        <span className="ml-1/4 pl-1/2 text-white">{user}</span>
+        <span className="ml-1/4 pl-1/2 text-main">{user}</span>
       </Avatar>
     </div>
   ) : null;
@@ -68,7 +68,7 @@ export default ({
   ));
   return (
     <div className={`chat-box ${className}`}>
-      <div className="header bg-gradient-main">
+      <div className="header bg-sidebar">
         <div className="d-flex p-1 justify-content-between">
           <div className="d-flex h-100 flex-1 align-items-center font-2x">
             <Avatar
@@ -83,14 +83,14 @@ export default ({
           </Link>
         </div>
       </div>
-      <div className="d-flex bg-sidebar body content-under-2-header scrollbar">
+      <div className="d-flex body content-under-2-header scrollbar">
         <div className="d-flex chat-row justify-content-center">
           {isLoading && <Spinner />}
         </div>
         {chats}
       </div>
-      <form onSubmit={onSubmit} className="form-send d-flex bg-gradient-main">
-        <div className="send-row d-flex flex-1 align-items-center">
+      <form onSubmit={onSubmit} className="form-send d-flex">
+        <div className="send-row bg-sidebar d-flex flex-1 align-items-center">
           <input
             className="d-block flex-1 w-100"
             value={messageInput}
