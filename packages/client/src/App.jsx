@@ -1,9 +1,7 @@
 import React from 'react';
 import { Router, Redirect } from '@reach/router';
-import { useRecoilValue } from 'recoil';
 
 import useTryAutoAuth from './hooks/useTryAutoAuth';
-import { authState } from './store/state';
 import ChatPage from './pages/ChatPage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
@@ -12,9 +10,7 @@ import NotFound from './pages/404';
 import AboutUs from './pages/AboutUs';
 
 const App = () => {
-  useTryAutoAuth();
-  const { isAuth } = useRecoilValue(authState);
-  if (isAuth === null) return null;
+  const { isAuth } = useTryAutoAuth();
   return (
     <div className="app">
       <Router>
@@ -29,6 +25,7 @@ const App = () => {
             <LoginPage path="/login" />
             <SignUpPage path="/signup" />
             <Redirect from="/" to="/login" noThrow />
+            <Redirect from="/logout" to="/login" noThrow />
           </>
         )}
         <AboutUs path="/about-us" />

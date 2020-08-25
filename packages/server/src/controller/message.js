@@ -41,8 +41,9 @@ const postMessage = (req, res, next) => {
 
 const getMessage = (req, res, next) => {
   try {
+    const username = req.get('Authorization').split(' ')[1];
     res.status(200).json({
-      message: 'message-fetch',
+      message: `${username} get`,
       data: chatLogs.map((text, index) => ({ ...text, key: index })),
     });
   } catch (err) {

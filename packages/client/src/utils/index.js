@@ -1,5 +1,4 @@
 export { default as api } from './api';
-export { default as socket } from './socket';
 export const checkValidity = (value, rules) => {
   let isValid = true;
 

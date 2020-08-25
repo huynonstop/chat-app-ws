@@ -1,33 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import React, { useState } from 'react';
 
-import useSocket from '../hooks/useSocket';
+import { useChatSubscription } from '../hooks/useSocket';
 import { api } from '../utils';
 import ChatBox from '../components/ChatBox';
 import Container from '../components/Container';
-import { authState } from '../store/state';
 
-export default () => {
-  const [messages, setMessages] = useState([]);
+const ChatPage = () => {
   const [messageInput, setMessageInput] = useState('');
-  const [loadingMessage, setLoadingMessage] = useState(null);
   const [loadingMessageInput, setLoadingMessageInput] = useState(false);
-  const { username } = useRecoilValue(authState);
-  useSocket(setMessages);
-  useEffect(() => {
-    setLoadingMessage(true);
-    const fetchMessage = async () => {
-      try {
-        const { data } = await api('message');
-        setMessages(data);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoadingMessage(false);
-      }
-    };
-    fetchMessage();
-  }, [setMessages]);
+  const { username, messages, loadingMessage } = useChatSubscription();
+
   const onSubmit = async e => {
     e.preventDefault();
     if (!messageInput) return;
@@ -45,9 +27,6 @@ export default () => {
       setLoadingMessageInput(false);
     }
   };
-  if (loadingMessage === null) {
-    return null;
-  }
   return (
     <Container flex fluid className="page">
       <div className="sidebar flex-1/4-lg h-screen of-y-a scrollbar">
@@ -69,3 +48,5 @@ export default () => {
     </Container>
   );
 };
+
+export default React.memo(ChatPage);

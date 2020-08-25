@@ -1,6 +1,6 @@
 import express from 'express';
 import { port, mode } from '../config.js';
-import { countIO } from '../socket/index.js';
+import countIO from '../socket/countIO.js';
 import messageRoute from './message.js';
 
 const router = express.Router();

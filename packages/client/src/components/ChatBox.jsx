@@ -1,48 +1,42 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { Link } from '@reach/router';
+import useScrollToView from '../hooks/useScrollToView';
 import { ReactComponent as Send } from '../svg/send.svg';
 import { ReactComponent as Logout } from '../svg/logout.svg';
 import { ReactComponent as Spinner } from '../svg/loading-spinner.svg';
-
-const Avatar = ({
-  children, src, className = '', imgClassName = '',
-}) => (
-  <>
-    <div className={`avatar ${className} d-inline-block`}>
-      <img className={imgClassName} src={src} alt="avatar" />
-    </div>
-    {children}
-  </>
-);
+import AvatarWithText from './AvatarWithText';
 
 const ChatRow = ({
   user, text, beginText = true, endText = true, isUser,
 }) => {
-  const chatRowRef = useRef(null);
-  const userClass = isUser ? 'user' : '';
-  const avatarOnText = beginText && !isUser ? (
-    <div className="d-flex">
-      <Avatar
-        className="avatar-1/2"
-        src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/256/ICON-ICX-icon.png"
-      >
-        <span className="ml-1/4 pl-1/2 text-main">{user}</span>
-      </Avatar>
-    </div>
+  const chatRowRef = useScrollToView();
+  const textClass = `flex-0 text ml-2 ${isUser ? 'user' : ''} ${
+    beginText ? 'top' : ''
+  } ${endText ? 'bottom' : ''}`;
+  const avatarWithUserName = beginText && !isUser ? (
+    <AvatarWithText
+      className="d-flex"
+      src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/256/ICON-ICX-icon.png"
+      avatarClass="avatar-1/2"
+    >
+      <span className="ml-1/4 pl-1/2 text-main">{user}</span>
+    </AvatarWithText>
   ) : null;
-  useEffect(() => {
-    chatRowRef.current.scrollIntoView({ behavior: 'smooth' });
-  }, []);
   return (
     <div className="d-flex chat-row flex-column" ref={chatRowRef}>
-      {avatarOnText}
-      <div
-        className={`flex-0 text ml-2 ${userClass} ${beginText ? 'top' : ''} ${
-          endText ? 'bottom' : ''
-        }`}
-      >
+      {avatarWithUserName}
+      <div className={textClass}>
         <span>{text}</span>
       </div>
+    </div>
+  );
+};
+
+const SystemRow = ({ text }) => {
+  const chatRowRef = useScrollToView();
+  return (
+    <div className="chat-row text-center" ref={chatRowRef}>
+      <span>{text}</span>
     </div>
   );
 };
@@ -57,30 +51,33 @@ export default ({
   loadingMessage,
   loadingMessageInput,
 }) => {
-  const chats = messages.map(({ username, message, key }, index) => (
+  const chats = messages.map(({
+    username, message, key, isSystem,
+  }, index) => (isSystem ? (
+    <SystemRow text={message} key={key} />
+  ) : (
     <ChatRow
       isUser={username === user}
       user={username}
       text={message}
       key={key}
       endText={
-        messages[index + 1] ? messages[index + 1].username !== username : true
-      }
+          messages[index + 1] ? messages[index + 1].username !== username : true
+        }
       beginText={index ? messages[index - 1].username !== username : true}
     />
-  ));
+  )));
   return (
     <div className={`chat-box ${className}`}>
       <div className="header bg-sidebar">
         <div className="d-flex p-1 justify-content-between">
-          <div className="d-flex h-100 flex-1 align-items-center font-2x">
-            <Avatar
-              className="mr-1"
-              src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/256/ICON-ICX-icon.png"
-            >
-              <p className="m-0 text-white">user</p>
-            </Avatar>
-          </div>
+          <AvatarWithText
+            className="d-flex h-100 flex-1 align-items-center font-2x"
+            src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/256/ICON-ICX-icon.png"
+            avatarClass="mr-1"
+          >
+            <p className="m-0 text-white">{user}</p>
+          </AvatarWithText>
           <Link to="/logout" className="icon-circle s-icon bg-icon p-2">
             <Logout className="s-icon absolute-center-xy" />
           </Link>
@@ -101,7 +98,9 @@ export default ({
             placeholder="Aa..."
             required
           />
-          {loadingMessageInput ? <Spinner className="spinner white" /> : (
+          {loadingMessageInput ? (
+            <Spinner className="spinner white" />
+          ) : (
             <button
               style={{ padding: '1.5rem' }}
               className="flex-0 max-3/2 btn-send bg-icon-send icon-circle border-sub"

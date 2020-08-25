@@ -6,7 +6,7 @@ export const AUTH = {
   key: 'AUTH',
   default: {
     token: null,
-    isAuth: null,
+    isAuth: false,
     username: null,
   },
 };

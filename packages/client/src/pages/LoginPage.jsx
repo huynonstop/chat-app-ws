@@ -18,8 +18,8 @@ export default () => {
   const setAuthState = useSetRecoilState(authState);
   const onSubmit = e => {
     e.preventDefault();
-    const token = 'token';
     const { username } = formState;
+    const token = username;
     setAuthState({ token, username, isAuth: true });
     dispatch(['reset']);
     if (formState.remember) {
