@@ -1,8 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import { useRecoilValue } from 'recoil';
 import io from 'socket.io-client';
 
-import { authState } from '../store/state';
 import { api } from '../utils';
 
 const ENDPOINT = process.env.REACT_APP_SOCKET;
@@ -11,7 +9,9 @@ localStorage.debug = 'socket.io-client:socket';
 const useSocket = token => {
   const socketRef = useRef(null);
   useEffect(() => {
+    console.log(token);
     if (!token) return () => {};
+    if (socketRef.current) return () => {};
     socketRef.current = io(ENDPOINT, {
       transports: ['websocket'],
       upgrade: false,
@@ -29,11 +29,11 @@ const useSocket = token => {
 };
 export default useSocket;
 
-export const useChatSubscription = () => {
-  const { username, token } = useRecoilValue(authState);
+export const useChatSubscription = (token, username) => {
   const [messages, setMessages] = useState([]);
   const [errorSocket, setErrorSocket] = useState(null);
-  const [loadingMessage, setLoadingMessage] = useState(null);
+  const [loadingMessage, setLoadingMessage] = useState(false);
+  const [typingUsers, setTypingUsers] = useState([]);
   const socket = useSocket(token);
   useEffect(() => {
     if (!socket) return;
@@ -41,7 +41,7 @@ export const useChatSubscription = () => {
       setMessages(prevState => [
         ...prevState,
         {
-          message: `${data.username} has connected`,
+          message,
           key: `system_${prevState.length}`,
           isSystem: true,
         },
@@ -66,6 +66,13 @@ export const useChatSubscription = () => {
 
   useEffect(() => {
     if (!socket) return;
+    socket.on('typing-user', ({ data }) => {
+      setTypingUsers(data.filter(u => u !== username));
+    });
+  }, [socket, username]);
+
+  useEffect(() => {
+    if (!socket) return;
     const connectHandler = async () => {
       try {
         setErrorSocket(null);
@@ -83,10 +90,9 @@ export const useChatSubscription = () => {
 
   return {
     socket,
-    token,
-    username,
     messages,
     errorSocket,
     loadingMessage,
+    typingUsers,
   };
 };

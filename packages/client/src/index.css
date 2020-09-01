@@ -775,3 +775,31 @@ button:hover {
   box-shadow: none;
   transition: background-color 5000s ease-in-out 0s;
 }
+
+.typing-indicator span {
+  margin: 0 1px;
+  height: .75rem;
+  width: .75rem;
+  display: inline-block;
+  background: #0077b6;
+  opacity: 0.4;
+  border-radius: 50%;
+  transition: all 0.3s ease-in-out;
+}
+
+.typing-indicator span:nth-of-type(1n) {
+  animation: 1s blink infinite 0.33s;
+}
+.typing-indicator span:nth-of-type(2n) {
+  animation: 1s blink infinite 0.66s;
+}
+.typing-indicator span:nth-of-type(3n) {
+  animation: 1s blink infinite 0.99s;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 1;
+    transform: translateY(0.25px);
+  }
+}

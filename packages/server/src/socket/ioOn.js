@@ -1,5 +1,4 @@
-import countIO from './countIO.js';
-import { socketDisconnect } from './socketOn.js';
+import { socketDisconnect, socketTyping } from './socketOn.js';
 
 export const ioConnect = (socket) => {
   const username = socket.handshake.query.token;
@@ -10,8 +9,8 @@ export const ioConnect = (socket) => {
       username,
     },
   });
-  console.log(message, countIO.addCount());
   socket.on('disconnect', socketDisconnect(socket, username));
+  socket.on('typing', socketTyping(socket));
 };
 
 export default {

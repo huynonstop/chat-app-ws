@@ -7,16 +7,22 @@ import { ReactComponent as Spinner } from '../svg/loading-spinner.svg';
 import AvatarWithText from './AvatarWithText';
 
 const ChatRow = ({
-  user, text, beginText = true, endText = true, isUser,
+  user,
+  text,
+  beginText = true,
+  endText = true,
+  isUser,
+  children,
 }) => {
   const chatRowRef = useScrollToView();
   const textClass = `flex-0 text ml-2 ${isUser ? 'user' : ''} ${
     beginText ? 'top' : ''
   } ${endText ? 'bottom' : ''}`;
+  const imageSrc = 'https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/256/ICON-ICX-icon.png';
   const avatarWithUserName = beginText && !isUser ? (
     <AvatarWithText
       className="d-flex"
-      src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/256/ICON-ICX-icon.png"
+      src={imageSrc}
       avatarClass="avatar-1/2"
     >
       <span className="ml-1/4 pl-1/2 text-main">{user}</span>
@@ -26,7 +32,8 @@ const ChatRow = ({
     <div className="d-flex chat-row flex-column" ref={chatRowRef}>
       {avatarWithUserName}
       <div className={textClass}>
-        <span>{text}</span>
+        {text && <span>{text}</span>}
+        {children}
       </div>
     </div>
   );
@@ -41,6 +48,19 @@ const SystemRow = ({ text }) => {
   );
 };
 
+const TypingRows = ({ typingUsers }) => {
+  if (typingUsers.length === 0) return null;
+  return typingUsers.map(u => (
+    <ChatRow key={u} user={u}>
+      <div className="typing-indicator">
+        <span />
+        <span />
+        <span />
+      </div>
+    </ChatRow>
+  ));
+};
+
 export default ({
   username: user,
   className,
@@ -50,6 +70,8 @@ export default ({
   setMessageInput,
   loadingMessage,
   loadingMessageInput,
+  onKeyNotEnter,
+  typingUsers,
 }) => {
   const chats = messages.map(({
     username, message, key, isSystem,
@@ -88,13 +110,17 @@ export default ({
           {loadingMessage && <Spinner />}
         </div>
         {chats}
+        <TypingRows typingUsers={typingUsers} />
       </div>
       <form onSubmit={onSubmit} className="form-send d-flex">
         <div className="send-row bg-sidebar d-flex flex-1 align-items-center">
           <input
             className="d-block flex-1 w-100"
             value={messageInput}
-            onChange={e => setMessageInput(e.target.value)}
+            onChange={e => {
+              setMessageInput(e.target.value);
+              onKeyNotEnter(e);
+            }}
             placeholder="Aa..."
             required
           />

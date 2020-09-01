@@ -1,4 +1,4 @@
-import countIO from './countIO.js';
+const typingUsers = new Set();
 
 export const socketDisconnect = (socket, username) => (reason) => {
   const message = `${username} has disconnected`;
@@ -9,9 +9,21 @@ export const socketDisconnect = (socket, username) => (reason) => {
       username,
     },
   });
-  console.log(message, countIO.removeCount());
-  console.log(reason);
+  if (typingUsers.has(username)) {
+    typingUsers.delete(username);
+    socket.broadcast.emit('typing-user', {
+      data: new Array(...typingUsers),
+    });
+  }
 };
-export default {
-  socketDisconnect,
+
+export const socketTyping = (socket) => ({ username, stop }) => {
+  if (stop) {
+    typingUsers.delete(username);
+  } else {
+    typingUsers.add(username);
+  }
+  socket.broadcast.emit('typing-user', {
+    data: new Array(...typingUsers),
+  });
 };

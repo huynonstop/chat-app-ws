@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { useRecoilValue } from 'recoil';
 
+import { authState } from '../store/state';
 import { useChatSubscription } from '../hooks/useSocket';
 import { api } from '../utils';
 import ChatBox from '../components/ChatBox';
 import Container from '../components/Container';
 
 const ChatPage = () => {
+  const { username, token } = useRecoilValue(authState);
   const [messageInput, setMessageInput] = useState('');
   const [loadingMessageInput, setLoadingMessageInput] = useState(false);
-  const { username, messages, loadingMessage } = useChatSubscription();
-
+  const {
+    socket, messages, loadingMessage, typingUsers,
+  } = useChatSubscription(token, username);
+  const timeout = useRef(null);
   const onSubmit = async e => {
     e.preventDefault();
     if (!messageInput) return;
@@ -21,10 +26,26 @@ const ChatPage = () => {
     setLoadingMessageInput(true);
     try {
       await api('message', options);
+      if (timeout.current) clearTimeout(timeout.current);
+      socket.emit('typing', { username, stop: true });
     } catch (err) {
       console.log(err);
     } finally {
       setLoadingMessageInput(false);
+    }
+  };
+  const onKeyNotEnter = e => {
+    if (e.key !== 'Enter') {
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+      } else {
+        socket.emit('typing', { username });
+      }
+
+      timeout.current = setTimeout(() => {
+        socket.emit('typing', { username, stop: true });
+        timeout.current = null;
+      }, 3000);
     }
   };
   return (
@@ -41,6 +62,8 @@ const ChatPage = () => {
         setMessageInput={setMessageInput}
         loadingMessage={loadingMessage}
         loadingMessageInput={loadingMessageInput}
+        onKeyNotEnter={onKeyNotEnter}
+        typingUsers={typingUsers}
       />
       <div className="sidebar flex-1/4-lg h-screen of-y-a scrollbar">
         Side bar people info
