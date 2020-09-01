@@ -2,7 +2,6 @@
 A chat app was built on websockets
 
 ## [DB](https://dbdiagram.io/d/5f4e1e9a88d052352cb58ab7)
-<iframe width="560" height="315" src='https://dbdiagram.io/embed/5f4e1e9a88d052352cb58ab7'> </iframe>
 
 ## Current status:
 
