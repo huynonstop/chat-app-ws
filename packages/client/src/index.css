@@ -227,6 +227,9 @@ code {
 
 .chat-box {
   flex-direction: column;
+}
+
+.box-shadow {
   box-shadow: 0px 0px 0.5rem rgba(0, 0, 0, 0.3);
 }
 
@@ -488,7 +491,7 @@ header {
 .align-items-end {
   align-items: flex-end;
 }
-.align-items-start{
+.align-items-start {
   align-items: flex-start;
 }
 
@@ -503,6 +506,18 @@ header {
   padding: 0.625rem 1rem;
   border-radius: 1rem;
   margin-right: 0.5rem;
+  font-size: 2rem;
+  background: white;
+  height: 100%;
+  transition: all 0.3s ease-in-out;
+}
+
+.search-row input {
+  outline: none;
+  border: solid 1px #0077b6;
+  color: #0077b6;
+  padding: 0.625rem 1rem;
+  border-radius: 1rem;
   font-size: 2rem;
   background: white;
   height: 100%;
@@ -589,7 +604,12 @@ input:focus::placeholder {
 }
 
 .signUp-form h1 {
-  background: linear-gradient(-105deg, #363795, #009acc);
+  background: linear-gradient(
+    349deg,
+    rgba(126, 249, 245, 1) 0%,
+    rgba(65, 152, 255, 1) 49%,
+    rgba(0, 212, 255, 1) 100%
+  );
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -770,16 +790,17 @@ button:hover {
 .form-input select:-webkit-autofill,
 .form-input select:-webkit-autofill:hover,
 .form-input select:-webkit-autofill:focus {
+  color: #00b4d8;
   border: 2px solid #00b4d8;
-  -webkit-text-fill-color: inherit;
+  -webkit-text-fill-color: #00b4d8;
   box-shadow: none;
   transition: background-color 5000s ease-in-out 0s;
 }
 
 .typing-indicator span {
   margin: 0 1px;
-  height: .75rem;
-  width: .75rem;
+  height: 0.75rem;
+  width: 0.75rem;
   display: inline-block;
   background: #0077b6;
   opacity: 0.4;
@@ -802,4 +823,20 @@ button:hover {
     opacity: 1;
     transform: translateY(0.25px);
   }
+}
+
+.logout {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  fill: #0077b6;
+}
+
+.logout:hover {
+  background: rgba(65, 152, 255, 1);
+  fill: white;
+}
+
+.align-content-start {
+  align-content: flex-start;
 }

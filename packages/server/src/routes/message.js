@@ -4,6 +4,6 @@ import messageController from '../controller/message.js';
 const router = express.Router();
 
 router.post('/', messageController.postMessage);
+router.get('/', messageController.getMessages);
 
-router.get('/', messageController.getMessage);
 export default router;

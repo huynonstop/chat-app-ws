@@ -1,73 +1,46 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
+import { Router, Link } from '@reach/router';
 import { useRecoilValue } from 'recoil';
-
-import { authState } from '../store/state';
-import { useChatSubscription } from '../hooks/useSocket';
-import { api } from '../utils';
 import ChatBox from '../components/ChatBox';
+import StartBox from '../components/StartBox';
 import Container from '../components/Container';
+import RoomsSidebar from '../components/RoomsSidebar';
+import { authState } from '../store/state';
+import { ReactComponent as Logout } from '../svg/logout.svg';
 
 const ChatPage = () => {
-  const { username, token } = useRecoilValue(authState);
-  const [messageInput, setMessageInput] = useState('');
-  const [loadingMessageInput, setLoadingMessageInput] = useState(false);
+  const [rooms, setRooms] = useState([]);
   const {
-    socket, messages, loadingMessage, typingUsers,
-  } = useChatSubscription(token, username);
-  const timeout = useRef(null);
-  const onSubmit = async e => {
-    e.preventDefault();
-    if (!messageInput) return;
-    const options = {
-      method: 'POST',
-      data: { message: messageInput, username },
-    };
-    setMessageInput('');
-    setLoadingMessageInput(true);
-    try {
-      await api('message', options);
-      if (timeout.current) clearTimeout(timeout.current);
-      socket.emit('typing', { username, stop: true });
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoadingMessageInput(false);
-    }
-  };
-  const onKeyNotEnter = e => {
-    if (e.key !== 'Enter') {
-      if (timeout.current) {
-        clearTimeout(timeout.current);
-      } else {
-        socket.emit('typing', { username });
-      }
-
-      timeout.current = setTimeout(() => {
-        socket.emit('typing', { username, stop: true });
-        timeout.current = null;
-      }, 3000);
-    }
-  };
+    username, token, inviteCode, userId,
+  } = useRecoilValue(authState);
   return (
     <Container flex fluid className="page">
-      <div className="sidebar flex-1/4-lg h-screen of-y-a scrollbar">
-        Side bar room chat
-      </div>
-      <ChatBox
-        className="d-flex flex-1/2-md h-screen of-y-h"
-        username={username}
-        messages={messages}
-        onSubmit={onSubmit}
-        messageInput={messageInput}
-        setMessageInput={setMessageInput}
-        loadingMessage={loadingMessage}
-        loadingMessageInput={loadingMessageInput}
-        onKeyNotEnter={onKeyNotEnter}
-        typingUsers={typingUsers}
-      />
+      <RoomsSidebar rooms={rooms} token={token} setRooms={setRooms} />
+      <Router className="d-flex flex-1/2-md box-shadow">
+        <ChatBox
+          path=":roomId"
+          className="d-flex flex-1 h-screen of-y-h"
+          username={username}
+          inviteCode={inviteCode}
+          token={token}
+          userId={userId}
+        />
+        <StartBox
+          path="/"
+          className="d-flex flex-1 justify-content-center flex-column align-items-center h-screen"
+          username={username}
+          inviteCode={inviteCode}
+          token={token}
+          setRooms={setRooms}
+        />
+      </Router>
       <div className="sidebar flex-1/4-lg h-screen of-y-a scrollbar">
         Side bar people info
       </div>
+
+      <Link to="/logout" className="logout box-shadow icon-circle s-icon p-2">
+        <Logout className="s-icon absolute-center-xy" />
+      </Link>
     </Container>
   );
 };

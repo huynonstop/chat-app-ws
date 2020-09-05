@@ -9,9 +9,17 @@ export default () => {
     if (!auth?.token || !auth?.username) {
       auth = JSON.parse(sessionStorage.getItem('user'));
     }
-    const { username = null, token = null } = auth || {};
-    const isAuth = username && token;
-    setAuthState({ isAuth, username, token });
+    const {
+      username = null, token = null, inviteCode = null, userId = null,
+    } = auth || {};
+    const isAuth = username && token && inviteCode && userId;
+    setAuthState({
+      isAuth,
+      username,
+      token,
+      inviteCode,
+      userId,
+    });
   }, [setAuthState]);
   return authStateValue;
 };

@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { navigate } from '@reach/router';
 import io from 'socket.io-client';
 
 import { api } from '../utils';
@@ -9,7 +10,6 @@ localStorage.debug = 'socket.io-client:socket';
 const useSocket = token => {
   const socketRef = useRef(null);
   useEffect(() => {
-    console.log(token);
     if (!token) return () => {};
     if (socketRef.current) return () => {};
     socketRef.current = io(ENDPOINT, {
@@ -20,40 +20,25 @@ const useSocket = token => {
     });
     const socket = socketRef.current;
     return () => {
+      console.log('disconnect');
       socket.removeAllListeners();
       socket.disconnect();
     };
   }, [token]);
-
   return socketRef.current;
 };
 export default useSocket;
 
-export const useChatSubscription = (token, username) => {
+export const useChatSubscription = (token, roomId, userId) => {
   const [messages, setMessages] = useState([]);
   const [errorSocket, setErrorSocket] = useState(null);
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [typingUsers, setTypingUsers] = useState([]);
   const socket = useSocket(token);
+
   useEffect(() => {
     if (!socket) return;
-    const systemMessageHandler = ({ data, message }) => {
-      setMessages(prevState => [
-        ...prevState,
-        {
-          message,
-          key: `system_${prevState.length}`,
-          isSystem: true,
-        },
-      ]);
-    };
-
-    socket.on('new-connect', systemMessageHandler);
-    socket.on('new-disconnect', systemMessageHandler);
-    socket.on('friend-connect', ({ data, message }) => {
-      console.log(message);
-    });
-    socket.on('message-create', ({ data }) => {
+    socket.on('room-message-create', ({ data }) => {
       setMessages(prevState => [...prevState, data]);
     });
 
@@ -61,23 +46,15 @@ export const useChatSubscription = (token, username) => {
     //   console.log(attemptNumber);
     // });
     socket.on('connect_error', err => console.log('connect_error', err));
-    socket.on('disconnect', reason => console.log(reason));
   }, [socket]);
 
   useEffect(() => {
-    if (!socket) return;
-    socket.on('typing-user', ({ data }) => {
-      setTypingUsers(data.filter(u => u !== username));
-    });
-  }, [socket, username]);
-
-  useEffect(() => {
-    if (!socket) return;
-    const connectHandler = async () => {
+    if (!socket) return () => {};
+    const connectHandler = async (room) => {
       try {
         setErrorSocket(null);
         setLoadingMessage(true);
-        const { data } = await api('message', { token });
+        const { data } = await api(`message?roomId=${room._id}`, { token });
         setMessages(data);
       } catch (err) {
         console.log(err);
@@ -85,8 +62,27 @@ export const useChatSubscription = (token, username) => {
         setLoadingMessage(false);
       }
     };
-    socket.on('connect', connectHandler);
-  }, [socket, token]);
+    socket.emit('join', { roomId }, (err, room) => {
+      if (err) {
+        console.log(err);
+        navigate('/');
+      } else {
+        connectHandler(room);
+      }
+    });
+    return () => {
+      socket.emit('leave', { roomId }, err => {
+        console.log(err);
+      });
+    };
+  }, [socket, roomId, token]);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on('typing-user', ({ data }) => {
+      setTypingUsers(data.filter(u => u !== userId));
+    });
+  }, [socket, userId]);
 
   return {
     socket,

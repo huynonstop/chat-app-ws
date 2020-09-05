@@ -1,7 +1,7 @@
 export default async (url, {
-  method, token, contentType, data,
+  method, token, contentType, data, api = true,
 } = {}) => {
-  const res = await fetch(`${process.env.REACT_APP_API}api/${url}`, {
+  const res = await fetch(`${process.env.REACT_APP_API}${api ? 'api/' : ''}${url}`, {
     method: method || 'GET',
     headers: {
       'Content-Type': contentType || 'application/json',
@@ -9,5 +9,9 @@ export default async (url, {
     },
     body: JSON.stringify(data),
   });
-  return res.json();
+  const _data = await res.json();
+  if (res.status >= 400 && res.status < 600) {
+    throw new Error(_data.error);
+  }
+  return _data;
 };
