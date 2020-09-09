@@ -1,35 +1,36 @@
-import React from 'react';
-import { useChatSubscription } from '../hooks/useSocket';
-import useMessageInput from '../hooks/useMessageInput';
+import React, { useEffect } from 'react';
 import useScrollToView from '../hooks/useScrollToView';
+import useMessageInput from '../hooks/useMessageInput';
 import { ReactComponent as Send } from '../svg/send.svg';
 import { ReactComponent as Spinner } from '../svg/loading-spinner.svg';
 import AvatarWithText from './AvatarWithText';
 
 export default ({
-  className, roomId, token, userId, username, inviteCode,
+  className,
+  userId,
+  username,
+  inviteCode,
+  roomId,
+  joinRoom,
+  sendMessage,
+  rooms = {},
 }) => {
+  const { loadingMessage, typingUsers = [] } = {};
+  useEffect(() => {
+    joinRoom(roomId);
+  }, [roomId, joinRoom]);
   const {
-    socket, messages, loadingMessage, typingUsers,
-  } = useChatSubscription(
-    token,
+    loading, messageInput, onChangeMessage, onSubmit,
+  } = useMessageInput(
+    sendMessage,
     roomId,
-    userId,
   );
-  const {
-    loading,
-    messageInput,
-    setMessageInput,
-    onSubmit,
-    onKeyNotEnter,
-  } = useMessageInput(socket, token, roomId);
+  const room = rooms[roomId] || {};
+  const messages = room.messages || [];
   const chats = messages.map(
-    (
-      {
-        message, _id, userId: chatUserId, isSystem,
-      },
-      index,
-    ) => (isSystem ? (
+    ({
+      message, _id, userId: chatUserId, isSystem,
+    }, index) => (isSystem ? (
       <SystemRow text={message} key={_id} />
     ) : (
       <ChatRow
@@ -38,9 +39,9 @@ export default ({
         user={chatUserId}
         text={message}
         endText={
-            messages[index + 1] ? messages[index + 1].userId !== userId : true
+            messages[index + 1] ? messages[index + 1].userId !== chatUserId : true
           }
-        beginText={index ? messages[index - 1].userId !== userId : true}
+        beginText={index ? messages[index - 1].userId !== chatUserId : true}
       />
     )),
   );
@@ -73,10 +74,7 @@ export default ({
           <input
             className="d-block flex-1 w-100"
             value={messageInput}
-            onChange={e => {
-              setMessageInput(e.target.value);
-              onKeyNotEnter(e);
-            }}
+            onChange={onChangeMessage}
             placeholder="Aa..."
             required
           />

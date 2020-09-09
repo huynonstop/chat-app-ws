@@ -7,10 +7,8 @@ export const login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({
-      $or: [
-        { username },
-        { password },
-      ],
+      username,
+      password,
     });
     if (!user) {
       return res.status(401).json({
@@ -58,18 +56,16 @@ export const signup = async (req, res, next) => {
       email,
       password,
     });
-    const rooms = new Room({
+    const room = new Room({
       users: [
         {
-          userId: user._id,
-          chats: [],
-          type: 'DEFAULT',
+          user: user._id,
         },
       ],
       chats: [],
       type: 'DEFAULT',
     });
-    await rooms.save();
+    await room.save();
     res.json({
       username,
     });

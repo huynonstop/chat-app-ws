@@ -1,5 +1,3 @@
-import mongoose from 'mongoose';
-import io from '../socket/index.js';
 import Room from '../models/room.js';
 import User from '../models/user.js';
 
@@ -7,7 +5,7 @@ const getRooms = async (req, res, next) => {
   try {
     const { userId } = req;
     const rooms = await Room.find({
-      'users.userId': userId,
+      'users.user': userId,
     });
     res.status(200).json({
       data: rooms,
@@ -23,7 +21,7 @@ const getRoom = async (req, res, next) => {
     const { roomId } = req.params;
     const room = await Room.findOne({
       _id: roomId,
-      'users.userId': userId,
+      'users.user': userId,
     });
     res.status(200).json({
       data: room,
@@ -38,6 +36,7 @@ const newGroup = async (req, res, next) => {
     const { userId } = req;
     const room = await Room.create({
       users: [{ userId }],
+      chats: [],
       type: 'GROUP',
     });
     return res.json({
@@ -62,7 +61,7 @@ const findOrCreatePrivate = async (req, res, next) => {
     }
     let room;
     room = await Room.findOne({
-      'users.userId': {
+      'users.user': {
         $all: [userId, user._id],
       },
       type: 'PRIVATE',
@@ -70,6 +69,7 @@ const findOrCreatePrivate = async (req, res, next) => {
     if (!room) {
       room = await Room.create({
         users: [{ userId }, { userId: user._id }],
+        chats: [],
         type: 'PRIVATE',
       });
     }
@@ -96,7 +96,7 @@ const adddToGroup = async (req, res, next) => {
     }
     const room = await Room.findOne({
       _id: roomId,
-      'users.userId': userId,
+      'users.user': userId,
       type: 'GROUP',
     });
     if (!room) {

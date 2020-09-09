@@ -1,33 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from '@reach/router';
-import { api } from '../utils';
 import { ReactComponent as Spinner } from '../svg/loading-spinner.svg';
 
-export default ({ rooms, setRooms, token }) => {
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    const fetchRooms = async () => {
-      try {
-        setLoading(true);
-        const { data } = await api('room', { token });
-        setRooms(data);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchRooms();
-  }, [token, setRooms]);
+export default ({ rooms, roomLoading }) => {
   let content = null;
-  if (loading) {
+  if (roomLoading) {
     content = (
       <div className="absolute absolute-center-xy">
         <Spinner />
       </div>
     );
   } else {
-    content = rooms.map(({ _id: id, type }) => (
+    content = Object.entries(rooms).map(([id, { type }]) => (
       <div key={id}>
         <Link
           to={`/${id}`}

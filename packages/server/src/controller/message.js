@@ -8,7 +8,7 @@ const postMessage = async (req, res, next) => {
     const { message, roomId } = req.body;
     const room = await Room.findOne({
       _id: roomId,
-      'users.userId': userId,
+      'users.user': userId,
     });
     if (!room) {
       return res.status(400).json({
@@ -35,7 +35,7 @@ const getMessages = async (req, res, next) => {
     const { roomId } = req.query;
     const room = await Room.findOne({
       _id: roomId,
-      'users.userId': userId,
+      'users.user': userId,
     });
     if (!room) {
       return res.status(400).json({
