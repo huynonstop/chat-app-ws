@@ -27,13 +27,13 @@ app.use(router);
 
 app.use('*', (req, res) => {
   res.status(404).json({
-    message: 'Not Found',
+    error: 'Not Found',
   });
 });
 
 app.use((err, req, res) => {
   res.status(err.status || 500).json({
-    message: err.message || 'Something went wrong!',
+    error: err.message || 'Something went wrong!',
   });
 });
 

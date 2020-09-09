@@ -8,8 +8,8 @@ export default () => {
   const setAuthState = useSetRecoilState(authState);
   useEffect(() => {
     setAuthState({ ...AUTH.default, isAuth: false });
-    sessionStorage.removeItem('user');
-    localStorage.removeItem('user');
+    localStorage.clear();
+    sessionStorage.clear();
   });
   return <Redirect from="/logout" to="/login" noThrow />;
 };

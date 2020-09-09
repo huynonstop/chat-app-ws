@@ -16,7 +16,7 @@ const App = () => {
       <Router>
         {isAuth ? (
           <>
-            <ChatPage path="/" />
+            <ChatPage path="/*" />
             <Logout path="/logout" />
             <Redirect from="/login" to="/" noThrow />
           </>

@@ -23,6 +23,7 @@
         "no-console": "off",
         "react/prop-types": "off",
         "arrow-parens": "off",
-        "prettier/prettier": "off"
+        "prettier/prettier": "off",
+        "no-underscore-dangle": "off"
     }
 }

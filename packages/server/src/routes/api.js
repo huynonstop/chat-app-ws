@@ -1,7 +1,7 @@
 import express from 'express';
 import { port, mode } from '../config.js';
-import countIO from '../socket/countIO.js';
 import messageRoute from './message.js';
+import roomRoute from './room.js';
 
 const router = express.Router();
 router.get('/test', (req, res) => {
@@ -10,8 +10,8 @@ router.get('/test', (req, res) => {
     mode,
     version: process.version,
     port,
-    currentIO: countIO.count(),
   });
 });
 router.use('/message', messageRoute);
+router.use('/room', roomRoute);
 export default router;

@@ -1,73 +1,77 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
+import {
+  Router, Link, Redirect, useMatch,
+} from '@reach/router';
 import { useRecoilValue } from 'recoil';
-
-import { authState } from '../store/state';
-import { useChatSubscription } from '../hooks/useSocket';
-import { api } from '../utils';
 import ChatBox from '../components/ChatBox';
+import StartBox from '../components/StartBox';
 import Container from '../components/Container';
+import RoomsSidebar from '../components/RoomsSidebar';
+import { authState } from '../store/state';
+import { ReactComponent as Logout } from '../svg/logout.svg';
+import useChat from '../hooks/useChat';
 
 const ChatPage = () => {
-  const { username, token } = useRecoilValue(authState);
-  const [messageInput, setMessageInput] = useState('');
-  const [loadingMessageInput, setLoadingMessageInput] = useState(false);
   const {
-    socket, messages, loadingMessage, typingUsers,
-  } = useChatSubscription(token, username);
-  const timeout = useRef(null);
-  const onSubmit = async e => {
+    username, token, inviteCode, userId,
+  } = useRecoilValue(authState);
+  const {
+    socket,
+    state,
+    joinRoom,
+    sendMessage,
+    newGroup,
+    findFriend,
+    addFriendToGroup,
+  } = useChat(token, userId);
+  const addRef = useRef(null);
+  const onSubmit = e => {
     e.preventDefault();
-    if (!messageInput) return;
-    const options = {
-      method: 'POST',
-      data: { message: messageInput, username },
-    };
-    setMessageInput('');
-    setLoadingMessageInput(true);
-    try {
-      await api('message', options);
-      if (timeout.current) clearTimeout(timeout.current);
-      socket.emit('typing', { username, stop: true });
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoadingMessageInput(false);
-    }
+    addFriendToGroup(matchRoomId.roomId, addRef.current.value);
+    addRef.current.value = '';
   };
-  const onKeyNotEnter = e => {
-    if (e.key !== 'Enter') {
-      if (timeout.current) {
-        clearTimeout(timeout.current);
-      } else {
-        socket.emit('typing', { username });
-      }
-
-      timeout.current = setTimeout(() => {
-        socket.emit('typing', { username, stop: true });
-        timeout.current = null;
-      }, 3000);
-    }
-  };
+  const matchRoomId = useMatch(':roomId');
   return (
     <Container flex fluid className="page">
+      <RoomsSidebar rooms={state} />
+      <Router className="d-flex flex-1/2-md box-shadow">
+        <ChatBox
+          path=":roomId"
+          className="d-flex flex-1 h-screen of-y-h"
+          username={username}
+          inviteCode={inviteCode}
+          token={token}
+          userId={userId}
+          joinRoom={joinRoom}
+          sendMessage={sendMessage}
+          rooms={state}
+        />
+        <StartBox
+          path="/"
+          className="d-flex flex-1 justify-content-center flex-column align-items-center h-screen"
+          username={username}
+          inviteCode={inviteCode}
+          token={token}
+          newGroup={newGroup}
+          findFriend={findFriend}
+        />
+        <Redirect from="/*" to="/" noThrow />
+      </Router>
       <div className="sidebar flex-1/4-lg h-screen of-y-a scrollbar">
-        Side bar room chat
+        <p>Side bar people info</p>
+        {matchRoomId && state[matchRoomId.roomId] && state[matchRoomId.roomId].type === 'GROUP' && (
+          <form key={1} className="search-row" onSubmit={onSubmit}>
+            <input ref={addRef} placeholder="Friend code ..." />
+            <button style={{ display: 'none' }} type="submit">
+              hidden
+            </button>
+          </form>
+        )}
       </div>
-      <ChatBox
-        className="d-flex flex-1/2-md h-screen of-y-h"
-        username={username}
-        messages={messages}
-        onSubmit={onSubmit}
-        messageInput={messageInput}
-        setMessageInput={setMessageInput}
-        loadingMessage={loadingMessage}
-        loadingMessageInput={loadingMessageInput}
-        onKeyNotEnter={onKeyNotEnter}
-        typingUsers={typingUsers}
-      />
-      <div className="sidebar flex-1/4-lg h-screen of-y-a scrollbar">
-        Side bar people info
-      </div>
+
+      <Link to="/logout" className="logout box-shadow icon-circle s-icon p-2">
+        <Logout className="s-icon absolute-center-xy" />
+      </Link>
     </Container>
   );
 };

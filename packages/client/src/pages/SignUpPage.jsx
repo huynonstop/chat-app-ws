@@ -5,6 +5,7 @@ import useForm from '../hooks/useForm';
 import LoadingPage from './LoadingPage';
 import Container from '../components/Container';
 import SignUp from '../components/SignUp';
+import { api } from '../utils';
 
 const INIT_FORM_STATE = {
   username: '',
@@ -24,15 +25,25 @@ export default () => {
   });
   const onSubmit = e => {
     e.preventDefault();
-    // const user = {
-    //   username: 'abc',
-    // };
-    dispatch(['reset']);
+    const { username, email, password } = formState;
+
     setFormLoading(true);
-    setTimeout(() => {
+    api('signup', {
+      method: 'POST',
+      data: {
+        username,
+        email,
+        password,
+      },
+      api: false,
+    }).then((data) => {
+      dispatch(['reset']);
       setFormLoading(false);
       navigate('/login');
-    }, 6000);
+    }).catch(err => {
+      setFormLoading(false);
+      console.log(err);
+    });
   };
   return (
     <Container flex fluid className="page bg-login ">

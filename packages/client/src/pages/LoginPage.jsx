@@ -5,7 +5,8 @@ import useForm from '../hooks/useForm';
 
 import Container from '../components/Container';
 import Login from '../components/Login';
-import { authState } from '../store/state';
+import { authState, roomState } from '../store/state';
+import { api } from '../utils';
 
 const INIT_FORM_STATE = {
   username: '',
@@ -16,17 +17,49 @@ const INIT_FORM_STATE = {
 export default () => {
   const { formState, dispatch, onFormInputChange } = useForm(INIT_FORM_STATE);
   const setAuthState = useSetRecoilState(authState);
-  const onSubmit = e => {
+  const setRoomState = useSetRecoilState(roomState);
+  const onSubmit = async e => {
     e.preventDefault();
-    const { username } = formState;
-    const token = username;
-    setAuthState({ token, username, isAuth: true });
-    dispatch(['reset']);
-    if (formState.remember) {
-      localStorage.setItem('user', JSON.stringify({ token, username }));
+    const { username: _username, password } = formState;
+    try {
+      const {
+        id, rooms, token, username, inviteCode,
+      } = await api('login', {
+        method: 'POST',
+        data: {
+          username: _username,
+          password,
+        },
+        api: false,
+      });
+      const userStorage = {
+        token,
+        username,
+        inviteCode,
+        userId: id,
+      };
+      setAuthState({
+        ...userStorage,
+        isAuth: true,
+      });
+      setRoomState({
+        rooms,
+      });
+      dispatch(['reset']);
+      if (formState.remember) {
+        localStorage.setItem(
+          'user',
+          JSON.stringify(userStorage),
+        );
+      }
+      sessionStorage.setItem(
+        'user',
+        JSON.stringify(userStorage),
+      );
+      navigate('/');
+    } catch (err) {
+      console.log(err);
     }
-    sessionStorage.setItem('user', JSON.stringify({ token, username }));
-    navigate('/');
   };
   return (
     <Container flex fluid className="page bg-sidebar">

@@ -8,5 +8,13 @@ export const AUTH = {
     token: null,
     isAuth: false,
     username: null,
+    userId: null,
+  },
+};
+export const ROOM = {
+  key: 'ROOM',
+  default: {
+    rooms: [],
+    selectedIndex: 0,
   },
 };
