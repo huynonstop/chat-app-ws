@@ -1,5 +1,5 @@
 # RamChat
-A chat app was built on websockets
+A chat app was built on websockets in 7 * 24h of coding
 
 ## DB
 
