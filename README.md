@@ -11,7 +11,7 @@ A chat app was built on websockets in 7 * 24h of coding
 - A multi room chat
 - MongoDB
 - Signup/Signin
-- Done
 - Ugly sidebar UI
+- And (lots of) bugs
 
 Demo: https://chat-app-react-client-ws.herokuapp.com/
